@@ -35,10 +35,10 @@ def show_banner():
     print(r"/\ \  __/\ \/\  _  \/\ \     /\ \     /\  _`\    ")
     print(r"\ \ \/\ \ \ \ \ \L\ \ \ \    \ \ \    \ \ \L\_\  ")
     print(r" \ \ \ \ \ \ \ \  __ \ \ \  __\ \ \  __\ \  _\L  ")
-    print(r"  \ \ \_/ \_\ \ \ \/\ \ \ \L\ \\\ \ \L\ \\\ \ \L\ \\")
+    print(r"  \ \ \_/ \_\ \ \ \/\ \ \ \L\ \\ \ \L\ \\ \ \L\ \\ ")
     print(r"   \ `\___x___/\ \_\ \_\ \____/ \ \____/ \ \____/")
     print(r"    '\/__//__/  \/_/\/_/\/___/   \/___/   \/___/ ")
-    print(r"\n\n")
+    print("\n\n")
 
 
 def get_video(user: str, password: str, address: str, port: str):
@@ -56,7 +56,7 @@ def get_video(user: str, password: str, address: str, port: str):
     logging.debug("Starting video stream...")
 
     url = ("http://" + address + ":" + port + "/videostream.cgi?user=" + user + "&pwd=" + password)
-    webbrowser.open(url, new=2, autoraise=True)
+    webbrowser.open(url, new=2, autoraise=False)
     show_menu(user, password, address, port)
 
 
@@ -91,7 +91,7 @@ def show_menu(user: str, password: str, address: str, port: str):
     print("2-Reboot webcam")
     print("3-Quit program")
 
-    menu = str(input(">:"))
+    menu = str(input("> "))
 
     if menu == "1":
         control(user, password, address, port)
@@ -131,85 +131,96 @@ def control(user: str, password: str, address: str, port: str):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pylocals.K_SPACE:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/snapshot.cgi?user=" + user +
-                           "&pwd=" + password)
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/snapshot.cgi?user=" + user +
+                                       "&pwd=" + password)
                     logging.debug("Space pressed : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_w:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "0")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "0")
                     logging.debug("Up pressed : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_s:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "2")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "2")
                     logging.debug("Down pressed : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_a:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "4")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "4")
                     logging.debug("Left pressed : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_d:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "6")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "6")
                     logging.debug("Right pressed : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_ESCAPE:
                     print("[*] Exiting")
                     running = False
 
             if event.type == pygame.KEYUP:
                 if event.key == pylocals.K_w:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "1")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "1")
                     logging.debug("Up released : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_s:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "3")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "3")
                     logging.debug("Down released : %s", url)
-                    response = requests.get(url, headers=HEADERS)
                 elif event.key == pylocals.K_a:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "5")
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "5")
                     logging.debug("Left released : %s", url)
-                    response = requests.get(url, headers=HEADERS)
+
                 elif event.key == pylocals.K_d:
-                    url = ("http://" + address +
-                           ":" + port +
-                           "/decoder_control.cgi?user=" + user +
-                           "&pwd=" + password +
-                           "&command=" + "7")
-                    response = requests.get(url, headers=HEADERS)
+                    response = connect("http://" + address +
+                                       ":" + port +
+                                       "/decoder_control.cgi?user=" + user +
+                                       "&pwd=" + password +
+                                       "&command=" + "7")
                     logging.debug("Right released : %s", url)
 
             if (response is not None) and (url is not None) and (response.status_code != 200):
                 logging.warning("Error while making request" +
                                 " : HTTP %d : %s", response.status_code, url)
+
+
+def connect(address: str):
+    """
+    Tries to connect to the IP camera, prints and logs the error if it fails.
+
+    :param address: The IP address of the IP camera
+    :return:
+        The response object returned by requests.get()
+    """
+
+    try:
+        response = requests.get(address, headers=HEADERS)
+        return response
+    except requests.exceptions.ConnectionError as error:
+        print(error)
+        logging.error(error, exc_info=True)
+        logging.shutdown()
+        sys.exit(0)
 
 
 def init():
